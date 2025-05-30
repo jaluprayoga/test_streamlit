@@ -15,6 +15,7 @@ desc_temp = """ ### Loan Prediction App
                 
                 #### Data Source
                 Kaggle: Link <Masukkan Link>
+                
                 """
 
 def main():
@@ -35,15 +36,37 @@ def run_ml_app():
              """
     st.markdown(design, unsafe_allow_html=True)
     
+    #Membuat Struktur Form
+    left, right = st.columns((2,2))
+    age = left.number_input('age')
+    bmi = right.selectbox('bmi', (24, 30, 55))
+    children = left.selectbox('children', (0,1,2,3, 4, 5))
+    sex_male = right.selectbox('gender', ('cewe', 'cowo'))
+    smoker_yes = left.selectbox('smoker', ('Yes', 'No'))
+    live = right.selectbox('live', ('region_northwest', 'region_southeast','region_southwest'))
+    button = st.button("Predict")
 
     #If button is clilcked
-    pass
+    if button:
+        result = predict(age, bmi, children, sex_male, smoker_yes, live)
 
-def predict(gender, married, dependent, education, self_employed, applicant_income, coApplicant_income
-                         ,loan_amount, loan_amount_term, credit_history, property_area):
-    
+        if result == 'Eligible':
+            st.success(f'You are {result} for the loan')
+        else:
+            st.error(f'You are {result} for the loan')
+
+def predict(age, bmi, children, sex_male, smoker_yes, live):
+    #Preprocessing User Input
+    sex = 0 if sex_male == 'cewe' else 1
+    smk = 0 if smoker_yes == 'No' else 1
+    # lve = 0 if live == 'region_northwest' else 1 if property_area == 'Urban' else 2
+
     #Making prediction
-    pass
+    prediction = gradient_boosting_regressor_model.predict(
+        [[age, bmi, children, sex, smk, 1, 0, 0]])
+    
+    result = 'Not Eligible' if prediction == 0 else 'Eligible'
+    return result
 
 if __name__ == "__main__":
     main()
