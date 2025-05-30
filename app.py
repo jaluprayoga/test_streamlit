@@ -50,10 +50,7 @@ def run_ml_app():
     if button:
         result = predict(age, bmi, children, sex_male, smoker_yes, live)
 
-        if result == 'Eligible':
-            st.success(f'You are {result} for the loan')
-        else:
-            st.error(f'You are {result} for the loan')
+        result
 
 def predict(age, bmi, children, sex_male, smoker_yes, live):
     #Preprocessing User Input
@@ -65,8 +62,8 @@ def predict(age, bmi, children, sex_male, smoker_yes, live):
     prediction = gradient_boosting_regressor_model.predict(
         [[age, bmi, children, sex, smk, 1, 0, 0]])
     
-    result = 'Not Eligible' if prediction == 0 else 'Eligible'
-    return result
+    
+    return prediction
 
 if __name__ == "__main__":
     main()
